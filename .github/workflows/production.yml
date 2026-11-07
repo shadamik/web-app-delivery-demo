@@ -1,0 +1,118 @@
+name: Production · Test and deploy
+run-name: "Production · ${{ github.event.head_commit.message }}"
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Run application and build tests
+        run: npm test
+      - name: Build production app
+        run: npm run build
+        env:
+          DEPLOY_ENV: Production
+          SOURCE_SHA: ${{ github.sha }}
+      - name: Upload tested app
+        uses: actions/upload-artifact@v4
+        with:
+          name: tested-app
+          path: dist
+          retention-days: 7
+  deploy:
+    name: Deploy to production
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    environment:
+      name: production
+      url: https://shadamik.github.io/web-app-delivery-demo
+    steps:
+      - name: Check out trusted deployment scripts
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Restore published site
+        uses: actions/checkout@v6
+        with:
+          ref: site-state
+          path: .site-state
+      - name: Download tested app
+        uses: actions/download-artifact@v4
+        with:
+          name: tested-app
+          path: build-output
+      - name: Assemble site while preserving other environments
+        run: bash scripts/assemble-site.sh
+        env:
+          DEPLOY_ENV: Production
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+      - name: Publish production
+        id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Verify live deployment
+        env:
+          URL: https://shadamik.github.io/web-app-delivery-demo
+          EXPECTED_SHA: ${{ github.sha }}
+        run: |
+          for attempt in $(seq 1 12); do
+            if curl -fsSL "$URL/deployment.json?run=$GITHUB_RUN_ID&attempt=$attempt" -o /tmp/deployment.json &&
+               jq -e --arg sha "$EXPECTED_SHA" '.sha == $sha' /tmp/deployment.json; then
+              exit 0
+            fi
+            sleep 5
+          done
+          echo 'Live deployment did not match the tested commit.' >&2
+          exit 1
+      - name: Save published site for the next deployment
+        working-directory: .site-state
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .
+          git diff --cached --quiet || git commit -m 'Update production deployment'
+          git push origin HEAD:site-state
+      - name: Write deployment summary
+        env:
+          URL: https://shadamik.github.io/web-app-delivery-demo
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          {
+            echo '## Production deployment completed'
+            echo ''
+            echo 'Application tests passed before deployment.'
+            echo ''
+            echo "**Environment:** Production"
+            echo "**Commit:** $SOURCE_SHA"
+            echo "**Live app:** $URL"
+            echo ''
+            echo 'Live deployment verified against the tested commit.'
+          } >> "$GITHUB_STEP_SUMMARY"

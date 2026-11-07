@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="820" viewBox="0 0 400 820">
+<rect x="35" y="20" width="330" height="120" rx="16" fill="#EFF4FA"/>
+<text x="200" y="80.0" font-family="Arial, sans-serif" font-size="26" fill="#172B4D" text-anchor="middle" dominant-baseline="central">Commit &amp; push</text>
+<path d="M200 148 L200 174" fill="none" stroke="#8090A4" stroke-width="3"/>
+<path d="M194 167 L200 174" fill="none" stroke="#8090A4" stroke-width="3"/>
+<path d="M206 167 L200 174" fill="none" stroke="#8090A4" stroke-width="3"/>
+<rect x="35" y="184" width="330" height="120" rx="16" fill="#EFF4FA"/>
+<text x="200" y="244.0" font-family="Arial, sans-serif" font-size="26" fill="#172B4D" text-anchor="middle" dominant-baseline="central">Open pull request</text>
+<path d="M200 312 L200 338" fill="none" stroke="#8090A4" stroke-width="3"/>
+<path d="M194 331 L200 338" fill="none" stroke="#8090A4" stroke-width="3"/>
+<path d="M206 331 L200 338" fill="none" stroke="#8090A4" stroke-width="3"/>
+<rect x="35" y="348" width="330" height="120" rx="16" fill="#E7F7F5"/>
+<text x="200" y="392.0" font-family="Arial, sans-serif" font-size="26" fill="#172B4D" text-anchor="middle" dominant-baseline="central">Test &amp; deploy</text>
+<text x="200" y="424.0" font-family="Arial, sans-serif" font-size="26" fill="#172B4D" text-anchor="middle" dominant-baseline="central">to preview</text>
+<path d="M200 476 L200 502" fill="none" stroke="#8090A4" stroke-width="3"/>
+<path d="M194 495 L200 502" fill="none" stroke="#8090A4" stroke-width="3"/>
+<path d="M206 495 L200 502" fill="none" stroke="#8090A4" stroke-width="3"/>
+<rect x="35" y="512" width="330" height="120" rx="16" fill="#EFF4FA"/>
+<text x="200" y="572.0" font-family="Arial, sans-serif" font-size="26" fill="#172B4D" text-anchor="middle" dominant-baseline="central">Merge</text>
+<path d="M200 640 L200 666" fill="none" stroke="#8090A4" stroke-width="3"/>
+<path d="M194 659 L200 666" fill="none" stroke="#8090A4" stroke-width="3"/>
+<path d="M206 659 L200 666" fill="none" stroke="#8090A4" stroke-width="3"/>
+<rect x="35" y="676" width="330" height="120" rx="16" fill="#143D59"/>
+<text x="200" y="720.0" font-family="Arial, sans-serif" font-size="26" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central">Test &amp; deploy</text>
+<text x="200" y="752.0" font-family="Arial, sans-serif" font-size="26" fill="#FFFFFF" text-anchor="middle" dominant-baseline="central">to production</text>
+</svg>
