@@ -1,8 +1,9 @@
 import { releases, selectReleases, summarize } from './releases.mjs';
 const board = document.querySelector('#release-board');
 const search = document.querySelector('#search');
+const status = document.querySelector('#status');
 function render() {
-  const items = selectReleases(releases, search.value);
+  const items = selectReleases(releases, search.value, status.value);
   board.replaceChildren(...items.map(item => {
     const card = document.createElement('article'); card.className = 'release-card';
     const tag = document.createElement('span'); tag.className = `status ${item.status.toLowerCase().replaceAll(' ', '-')}`; tag.textContent = item.status;
@@ -19,4 +20,4 @@ function render() {
 }
 const summary=summarize(releases);
 for (const [key,value] of Object.entries(summary)) document.querySelector(`[data-metric="${key}"]`).textContent=value;
-search.addEventListener('input',render);render();
+search.addEventListener('input',render);status.addEventListener('change',render);render();
